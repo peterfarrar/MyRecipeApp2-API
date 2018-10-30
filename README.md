@@ -14,4 +14,6 @@ Here is an example of the contents:
 `        "MONGODB_URI": "mongodb://localhost:27017/RecipeApp",`  
 `        "JWT_SECRET": "lhZbKr5aWk4G7dVrnq2.Se9zmRaNE4O"`  
 `    }`  
-`}`  
+`}`
+
+I think it's pretty self evident, but the secret is used for seeding the JWT used for authenticating users.  
