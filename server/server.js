@@ -89,7 +89,8 @@ app.delete('/recipes/:id', authenticate, (req, res) => {
 
 app.patch('/recipes/:id', authenticate, (req, res) => {
     let id = req.params.id;
-    let body = _.pick(req.body, ['text', 'completed']);
+    let body = _.pick(req.body, ['title', 'recipeName', 'author', 'date', 'descriptions', 'ingredients', 'steps']);
+    //let body = _.pick(req.body, ['text', 'completed']);
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send({});
@@ -107,7 +108,8 @@ app.patch('/recipes/:id', authenticate, (req, res) => {
             return res.status(404).send();
         }
 
-        res.send({recipe});
+        //res.send({recipe});
+        res.send(body);
     }).catch(() => {
         res.status(400).send();
     });

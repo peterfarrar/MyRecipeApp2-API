@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
@@ -15,24 +16,33 @@ beforeEach(populateRecipes);
 
 describe('POST /recipes', () => {
     it('should create a new recipe', (done) => {
-        let text = 'Test recipe text';
+        let recipe = {
+            title: "Hard Steamed Egg",
+            recipeName: "Hard Steamed Egg",
+            author: "Peter",
+            date: "12/16/2018",
+            descriptions: ["I've struggled for years to make a decent hard boiled egg.  Inevitably the shell cracks and leaks whites into the pot, or the egg is under cooked.", "I've found that a steamed egg works much better.  12 minutes at near sea level, and I get an excellent egg everytime.  Now if I can figure out the secret to keeping the shell from sticking..."],
+            ingredients: ["Egg(s)", "Ice water"],
+            steps: ["In a steamer, bring about a quarter to a half inch of water to a boil", "Place egg(s) on the grate, or whatever, above the boiling water.", "Cover eggs and reduce heat until watter is at a low simmer", "After 12 minutes, remove eggs and drop into a bowl of ice water.", "Peel eggs and enjoy!"],
+        };
 
         request(app)
             .post('/recipes')
             .set('x-auth', users[0].tokens[0].token)
-            .send({text})
+            .send(recipe)
             .expect(200)
             .expect((res) => {
-                expect(res.body.text).toBe(text);
+                let body = _.pick(res.body, ['title', 'recipeName', 'author', 'date', 'descriptions', 'ingredients', 'steps']);
+
+                expect(recipe).toEqual(body);
             })
             .end((err,res) => {
                 if (err) {
                     return done(err);
                 }
 
-                Recipe.find({text}).then( (recipes) => {
+                Recipe.find({recipeName: recipe.recipeName}).then( (recipes) => {
                     expect(recipes.length).toBe(1);
-                    expect(recipes[0].text).toBe(text);
                     done();
                 }).catch((e) => done(e));
             });
