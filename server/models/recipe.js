@@ -45,7 +45,6 @@ RecipeSchema.pre('save', function (next) {
     let recipe = this;
 
     let recipeObject = recipe.toObject();
-    console.log("in RecipeSchema.pre(save):", JSON.stringify(recipeObject,undefined,2));
 
     next();
 });

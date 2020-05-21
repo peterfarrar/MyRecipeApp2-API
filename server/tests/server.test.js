@@ -183,22 +183,19 @@ describe('DELETE /recipes/:id', () => {
 describe('PATCH /recipes/:id', () => {
     it('should update the recipe', (done) => {
         let oid = recipes[0]._id.toHexString();
-        let text = 'Updating text in /recipes/:id test 1';
-        let completed = true;
+        let title = 'My New Title';
+        let recipeName = 'My New Recipe Name';
 
         request(app)
             .patch(`/recipes/${oid}`)
             .set('x-auth', users[0].tokens[0].token)
-            .send({text, completed})
+            .send({ title, recipeName })
             .expect(200)
             .expect((res) => {
-                expect(res.body.recipe.text).toBe(text);
+                expect(res.body.title).toBe(title);
             })
             .expect((res) => {
-                expect(res.body.recipe.completed).toBe(true);
-            })
-            .expect((res) => {
-                expect(typeof res.body.recipe.completedAt).toBe('number');
+                expect(res.body.recipeName).toBe(recipeName);
             })
             .end(done);
     });
@@ -213,28 +210,6 @@ describe('PATCH /recipes/:id', () => {
             .set('x-auth', users[1].tokens[0].token)
             .send({text, completed})
             .expect(404)
-            .end(done);
-    });
-
-    it('should clear completedAt when recipe is not completed', (done) => {
-        let oid = recipes[1]._id.toHexString();
-        let text = 'Updating text in /recipes/:id test 2';
-        let completed = false;
-
-        request(app)
-            .patch(`/recipes/${oid}`)
-            .set('x-auth', users[1].tokens[0].token)
-            .send({text, completed})
-            .expect(200)
-            .expect((res) => {
-                expect(res.body.recipe.text).toBe(text);
-            })
-            .expect((res) => {
-                expect(res.body.recipe.completed).toBe(false);
-            })
-            .expect((res) => {
-                expect(res.body.recipe.completedAr).toBeFalsy();
-            })
             .end(done);
     });
 });
